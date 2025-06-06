@@ -102,7 +102,7 @@ export default function HomePage() {
     <div className="space-y-12 md:space-y-16">
       <header className="text-center py-8">
         <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl text-primary mb-4">
-          Pantry Chef AI
+          AI chef by Moe
         </h1>
         <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
           Transform your pantry staples into delightful dishes. Enter your ingredients and let our AI chef inspire your next meal!
