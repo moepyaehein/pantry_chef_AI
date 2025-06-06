@@ -5,7 +5,7 @@ import { Footer } from '@/components/layout/Footer';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Pantry Chef AI',
+  title: 'AI Chef By Moe',
   description: 'Get recipe suggestions based on your pantry ingredients!',
 };
 

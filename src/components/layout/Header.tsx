@@ -15,7 +15,7 @@ export function Header() {
       <div className="container mx-auto px-4 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors">
           <ChefHat size={32} />
-          <span className="font-headline text-2xl font-semibold">Pantry Chef AI</span>
+          <span className="font-headline text-2xl font-semibold">AI Chef By Moe</span>
         </Link>
         
         {/* Desktop Navigation */}
