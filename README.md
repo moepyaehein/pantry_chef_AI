@@ -1,4 +1,4 @@
-# Firebase Studio
+# Visual Studio Code
 
 This is a Next.js project for a Pantry Chef AI application. It leverages AI capabilities to assist users with recipes, substitutions, and image generation.
 
