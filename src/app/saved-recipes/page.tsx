@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useSavedRecipes } from '@/hooks/useSavedRecipes';
@@ -6,18 +7,24 @@ import { Button } from '@/components/ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Inbox } from 'lucide-react';
 import Link from 'next/link';
+import type { Recipe } from '@/types';
 
 export default function SavedRecipesPage() {
   const { savedRecipes, removeRecipe, isRecipeSaved, isLoading } = useSavedRecipes();
   const { toast } = useToast();
 
-  const handleRemoveRecipe = (recipeId: string) => {
-    const recipe = savedRecipes.find(r => r.id === recipeId);
-    removeRecipe(recipeId);
-    if (recipe) {
+  const handleToggleSave = (recipe: Recipe) => {
+    // On this page, toggle means remove if it's saved.
+    // If by some chance it's not "isSaved" (though it should be, to be in this list),
+    // this function would effectively do nothing or could be adapted to save it again.
+    // For simplicity, we assume if it's on this page, 'toggling' it off means removing.
+    if (isRecipeSaved(recipe.id)) {
+      removeRecipe(recipe.id);
       toast({ title: "Recipe Removed", description: `${recipe.dishName} has been removed from your saved recipes.` });
     }
+    // No "else" needed as recipes are added from the main page.
   };
+
 
   if (isLoading) {
     return (
@@ -54,7 +61,8 @@ export default function SavedRecipesPage() {
             <RecipeCard
               key={recipe.id}
               recipe={recipe}
-              onRemove={() => handleRemoveRecipe(recipe.id)}
+              isSaved={true} // Recipes on this page are inherently saved
+              onSaveToggle={handleToggleSave} // This will effectively act as "unsave"
               className="transform hover:scale-105 transition-transform duration-300"
             />
           ))}

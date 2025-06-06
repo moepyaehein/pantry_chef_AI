@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -56,8 +57,7 @@ export default function HomePage() {
     setSuggestedRecipe(null);
     try {
       const result = await getRecipeSuggestionAction(data);
-      const recipeWithId: RecipeType = { ...result, id: result.dishName + Date.now() }; // Simple ID generation
-      setSuggestedRecipe(recipeWithId);
+      setSuggestedRecipe(result); // result already includes an ID from the action
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred.";
       setRecipeError(errorMessage);
@@ -94,7 +94,7 @@ export default function HomePage() {
       addRecipe(recipe);
       toast({ title: "Recipe Saved!", description: `${recipe.dishName} added to your saved recipes.` });
     }
-    // Force re-render or update state if RecipeCard needs to reflect this immediately
+    // Force re-render of the recipe card to update the save icon
     setSuggestedRecipe(prev => prev ? {...prev} : null); 
   };
 

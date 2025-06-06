@@ -42,28 +42,30 @@ export function RecipeCard({ recipe, isSaved, onSaveToggle, onRemove, className 
   const showFallbackIcon = imageError || (!recipe.recipeImageUri && imageSrc === placeholderImage);
 
   return (
-    <Card className={`w-full shadow-lg hover:shadow-xl transition-shadow duration-300 ${className}`}>
+    <Card className={`w-full shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col ${className}`}>
       <CardHeader className="pb-4">
         <div className="flex justify-between items-start">
-          <div>
+          <div className="flex-grow">
             <CardTitle className="font-headline text-2xl text-primary mb-1 flex items-center gap-2">
               <CookingPot size={28} className="inline-block" /> {recipe.dishName}
             </CardTitle>
             <CardDescription className="font-body text-base">{recipe.description}</CardDescription>
           </div>
-          {onSaveToggle && (
-            <Button variant="ghost" size="icon" onClick={() => onSaveToggle(recipe)} aria-label={isSaved ? "Unsave recipe" : "Save recipe"}>
-              {isSaved ? <BookmarkMinus className="text-accent" /> : <BookmarkPlus />}
-            </Button>
-          )}
-          {onRemove && (
-            <Button variant="ghost" size="icon" onClick={() => onRemove(recipe.id)} aria-label="Remove recipe">
-              <Trash2 className="text-destructive" />
-            </Button>
-          )}
+          <div className="flex-shrink-0 ml-2">
+            {onSaveToggle && (
+              <Button variant="ghost" size="icon" onClick={() => onSaveToggle(recipe)} aria-label={isSaved ? "Unsave recipe" : "Save recipe"}>
+                {isSaved ? <BookmarkMinus className="text-accent h-6 w-6" /> : <BookmarkPlus className="h-6 w-6" />}
+              </Button>
+            )}
+            {onRemove && (
+              <Button variant="ghost" size="icon" onClick={() => onRemove(recipe.id)} aria-label="Remove recipe">
+                <Trash2 className="text-destructive h-6 w-6" />
+              </Button>
+            )}
+          </div>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-grow">
         <div className="mb-6 aspect-[2/1] w-full rounded-md overflow-hidden bg-muted flex items-center justify-center relative">
           <Image
             src={imageSrc}
@@ -125,7 +127,7 @@ export function RecipeCard({ recipe, isSaved, onSaveToggle, onRemove, className 
           </AccordionItem>
         </Accordion>
       </CardContent>
-      { (onSaveToggle || onRemove) && <CardFooter />}
+      { (onSaveToggle || onRemove) && <CardFooter className="pt-4 mt-auto" /> /* Added mt-auto and pt-4 for spacing */}
     </Card>
   );
 }

@@ -2,15 +2,21 @@
 
 import { suggestRecipe as suggestRecipeFlow, type SuggestRecipeInput, type SuggestRecipeOutput } from '@/ai/flows/suggest-recipe';
 import { suggestSubstitution as suggestSubstitutionFlow, type SuggestSubstitutionInput, type SuggestSubstitutionOutput } from '@/ai/flows/suggest-substitution';
+import type { Recipe } from '@/types';
 
-export async function getRecipeSuggestionAction(input: SuggestRecipeInput): Promise<SuggestRecipeOutput> {
+export async function getRecipeSuggestionAction(input: SuggestRecipeInput): Promise<Recipe> {
   try {
-    const recipe = await suggestRecipeFlow(input);
-    if (!recipe.dishName || !recipe.description || !recipe.ingredientsNeeded || !recipe.instructions) {
+    const recipeDetails = await suggestRecipeFlow(input);
+    if (!recipeDetails.dishName || !recipeDetails.description || !recipeDetails.ingredientsNeeded || !recipeDetails.instructions) {
       // recipeImageUri is optional, so not checked here
       throw new Error("AI failed to generate a complete recipe text. Please try again.");
     }
-    return recipe;
+    // Add a simple unique ID for client-side management
+    const recipeWithId: Recipe = { 
+      ...recipeDetails, 
+      id: `${recipeDetails.dishName.replace(/\s+/g, '-')}-${Date.now()}` 
+    };
+    return recipeWithId;
   } catch (error) {
     console.error("Error in getRecipeSuggestionAction:", error);
     // It's better to rethrow the original error if it's an Error instance or provide a more generic message
