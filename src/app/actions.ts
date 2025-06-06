@@ -7,11 +7,13 @@ export async function getRecipeSuggestionAction(input: SuggestRecipeInput): Prom
   try {
     const recipe = await suggestRecipeFlow(input);
     if (!recipe.dishName || !recipe.description || !recipe.ingredientsNeeded || !recipe.instructions) {
-      throw new Error("AI failed to generate a complete recipe. Please try again.");
+      // recipeImageUri is optional, so not checked here
+      throw new Error("AI failed to generate a complete recipe text. Please try again.");
     }
     return recipe;
   } catch (error) {
     console.error("Error in getRecipeSuggestionAction:", error);
+    // It's better to rethrow the original error if it's an Error instance or provide a more generic message
     throw new Error(error instanceof Error ? error.message : "Failed to get recipe suggestion due to an unknown error.");
   }
 }

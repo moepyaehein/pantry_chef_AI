@@ -1,11 +1,14 @@
+// src/components/pantry-chef/RecipeCard.tsx
 "use client";
 
 import type { Recipe } from '@/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Utensils, ListChecks, CookingPot, Trash2, BookmarkPlus, BookmarkMinus, AlertCircle } from 'lucide-react';
+import { Utensils, ListChecks, CookingPot, Trash2, BookmarkPlus, BookmarkMinus, AlertCircle, ImageOff } from 'lucide-react';
 import Image from 'next/image';
+import { useState, useEffect } from 'react';
+
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -23,6 +26,20 @@ const parseMultilineString = (text: string): string[] => {
 export function RecipeCard({ recipe, isSaved, onSaveToggle, onRemove, className }: RecipeCardProps) {
   const ingredientsList = parseMultilineString(recipe.ingredientsNeeded);
   const instructionsList = parseMultilineString(recipe.instructions);
+  const [imageError, setImageError] = useState(false);
+  const [currentRecipeId, setCurrentRecipeId] = useState(recipe.id);
+
+  useEffect(() => {
+    // Reset imageError when the recipe (specifically its image URI or ID) changes
+    if (recipe.id !== currentRecipeId) {
+      setImageError(false);
+      setCurrentRecipeId(recipe.id);
+    }
+  }, [recipe.id, recipe.recipeImageUri, currentRecipeId]);
+
+  const placeholderImage = "https://placehold.co/600x300.png";
+  const imageSrc = recipe.recipeImageUri && !imageError ? recipe.recipeImageUri : placeholderImage;
+  const showFallbackIcon = imageError || (!recipe.recipeImageUri && imageSrc === placeholderImage);
 
   return (
     <Card className={`w-full shadow-lg hover:shadow-xl transition-shadow duration-300 ${className}`}>
@@ -47,15 +64,26 @@ export function RecipeCard({ recipe, isSaved, onSaveToggle, onRemove, className 
         </div>
       </CardHeader>
       <CardContent>
-        <div className="mb-6">
+        <div className="mb-6 aspect-[2/1] w-full rounded-md overflow-hidden bg-muted flex items-center justify-center relative">
           <Image
-            src={`https://placehold.co/600x300.png`}
+            src={imageSrc}
             alt={`Image of ${recipe.dishName}`}
-            data-ai-hint="cooked dish"
+            data-ai-hint={recipe.recipeImageUri ? "generated dish" : "food placeholder"}
             width={600}
             height={300}
-            className="rounded-md object-cover w-full"
+            className="object-cover w-full h-full"
+            onError={() => {
+              if (recipe.recipeImageUri) { // Only set error if it was trying to load a generated image
+                setImageError(true);
+              }
+            }}
+            priority={!!recipe.recipeImageUri} // Prioritize loading generated images
           />
+           {showFallbackIcon && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+              <ImageOff size={48} className="text-slate-400" />
+            </div>
+          )}
         </div>
 
         <Accordion type="single" collapsible defaultValue="ingredients" className="w-full">

@@ -3,6 +3,7 @@ import type { SuggestSubstitutionOutput as GenkitSubstitutionOutput } from '@/ai
 
 export interface Recipe extends GenkitRecipeOutput {
   id: string; // Add an id for local storage and list keys
+  recipeImageUri?: string; // Ensure this property is part of the type
 }
 
 export interface Substitution extends GenkitSubstitutionOutput {}
